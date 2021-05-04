@@ -6,7 +6,7 @@ using BenchmarkDotNet.Running;
 namespace Algoritms4
 {
     //Задание 1. Заполнить массив, HashSet случайными строками, Выполнить поиск строки, замерить скорость производительности.
-   public class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -15,9 +15,9 @@ namespace Algoritms4
     }
     public class BenchMarkClass
     {
-       //Столкнулся со следующей проблемой, при установке колличества элементов в массиве, листе хэшлисте даже 5 элементов, проверка в Бенчмарке проходит очень долго и судя по консоли
-       //алгоритм проходится больше чем по 5 элементам. И в конце теста, бенчмарк не выводит таблицу результатов, как в дз к 3му уроку. При установке элементов (например в массиве) более 10 000
-       //проверка в бенчмарке бесконечна... Прошу навести на мысль, где что не так)
+        //Столкнулся со следующей проблемой, при установке колличества элементов в массиве, листе хэшлисте даже 5 элементов, проверка в Бенчмарке проходит очень долго и судя по консоли
+        //алгоритм проходится больше чем по 5 элементам. И в конце теста, бенчмарк не выводит таблицу результатов, как в дз к 3му уроку. При установке элементов (например в массиве) более 10 000
+        //проверка в бенчмарке бесконечна... Прошу навести на мысль, где что не так)
         [Benchmark]
         public void TestSearchArray()
         {
@@ -27,13 +27,13 @@ namespace Algoritms4
 
             for (int i = 0; i < myArray.Length; i++)
             {
-               myArray[i] = Guid.NewGuid().ToString();
+                myArray[i] = Guid.NewGuid().ToString();
             }
-            foreach(string str in myArray)
+            foreach (string str in myArray)
             {
                 if (str == search)
                     Console.WriteLine("Строка найдена!");
-               else
+                else
                     Console.WriteLine("Строка не найдена!");
             }
         }
@@ -49,7 +49,7 @@ namespace Algoritms4
             {
                 myHash.Add(Guid.NewGuid().ToString());
             }
-            if(myHash.Contains(search))
+            if (myHash.Contains(search))
                 Console.WriteLine("Строка найдена!");
             else
                 Console.WriteLine("Строка не найдена!");
@@ -66,7 +66,7 @@ namespace Algoritms4
             for (int i = 0; i < count; i++)
                 myList.Add(Guid.NewGuid().ToString());
             if (myList.Contains(search))
-            Console.WriteLine("Строка найдена!");
+                Console.WriteLine("Строка найдена!");
             else
                 Console.WriteLine("Строка не найдена!");
         }
@@ -75,15 +75,15 @@ namespace Algoritms4
 
     // Задание 2. Реализовать класс двоичного дерева поиска с операциями вставки, удаления, поиска.
     //Аналогично с дз ко второму уроку. Возникают сложности с описанием метода. Алгоритм представляется, но происходит путаница при написании кода. Отсюда и не могу конкретные вопросы задать(
-    public class TreeNode: ITree
+    public class TreeNode : ITree
     {
         public int Value { get; set; }
         public TreeNode LeftSide { get; set; }
         public TreeNode RightSide { get; set; }
-        public TreeNode Head { get; set; }
+        public TreeNode Root { get; set; }
 
         public TreeNode Parent { get; set; }
-        public override bool Equals (object obj)
+        public override bool Equals(object obj)
         {
             var node = obj as TreeNode;
             if (node == null)
@@ -92,48 +92,44 @@ namespace Algoritms4
         }
         public void AddItem(int value)
         {
-            TreeNode selected = Head;
-            if (selected == null)
+            if (Root == null)
             {
-                Head = new TreeNode();
+                var node = new TreeNode();
+                node.Value = value;
+                Root = node;
                 return;
-            }
-            if (value == selected.Value)
-                return;
-            while (value != selected.Value)
-            {
-                if (value < selected.Value)
-                {
-                    if (selected.LeftSide != null)
-                        selected = selected.LeftSide;
 
-                    else
-                    {
-                        selected.LeftSide = new TreeNode();
-                        return;
-                    }
-                }
-                else if (value > selected.Value)
-                {
-                    if (selected.RightSide != null)
-                        selected = selected.RightSide;
-                    else
-                    {
-                        selected.RightSide = new TreeNode();
-                        return;
-                    }
-                }
+            }
+            AddItemRecursion(Root, value);
+
+        }
+        public void AddItemRecursion(TreeNode Root, int value)
+        {
+
+
+            if (value < Root.Value)
+            {
+                if (Root.LeftSide == null)
+                    Root.LeftSide = new TreeNode() { Value = value };
+                else
+                    AddItemRecursion(Root.LeftSide, value);
+            }
+            else
+            {
+                if (Root.RightSide == null)
+                    Root.RightSide = new TreeNode() { Value = value };
+                else
+                    AddItemRecursion(Root.RightSide, value);
             }
         }
-
         public TreeNode GetNode()
         {
-            return Head;
+            return Root;
         }
 
         public TreeNode GetNodeByValue(int value)
         {
-            TreeNode selected = Head;
+            TreeNode selected = Root;
             while (selected != null && value != selected.Value)
             {
                 if (value < selected.Value)
@@ -153,7 +149,7 @@ namespace Algoritms4
 
         public void RemoveItem(int value)
         {
-            TreeNode selected = Head;
+            TreeNode selected = Root;
             while (selected != null && value != selected.Value)
             {
                 if (value < selected.Value)
@@ -161,12 +157,12 @@ namespace Algoritms4
                 else
                     selected = selected.RightSide;
             }
-            
-            }
 
         }
-    
 
+
+
+    }
     public interface ITree
     {
         TreeNode GetNode();
@@ -176,4 +172,5 @@ namespace Algoritms4
         void PrintTree();
     }
 }
+
 

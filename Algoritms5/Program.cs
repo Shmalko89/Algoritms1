@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Algoritms5
@@ -44,21 +44,21 @@ namespace Algoritms5
             }
 
         }
-        public List<TreeNode> BFS()
+        public void BFS()
         {
-            List<TreeNode> myTree = new List<TreeNode>();
-            Queue<TreeNode> queueTree = new Queue<TreeNode>();
+           
+            Queue queueTree = new Queue();
 
             queueTree.Enqueue(Root);
 
             if(queueTree.Count == 0)
             {
-                return myTree;
+                return;
             }
 
             while (queueTree.Count > 0)
             {
-                var selected = queueTree.Dequeue();
+               TreeNode selected = (TreeNode)queueTree.Dequeue();
 
                 if (selected.LeftSide != null)
                     queueTree.Enqueue(selected.LeftSide);
@@ -68,25 +68,24 @@ namespace Algoritms5
                     queueTree.Enqueue(selected.RightSide);
 
             }
-            return myTree;
 
         }
 
-        public List<TreeNode> DFS()
+        public void DFS()
         {
-            List<TreeNode> myTree = new List<TreeNode>();
-            Stack<TreeNode> stackTree = new Stack<TreeNode>();
+            
+            Stack stackTree = new Stack();
 
             stackTree.Push(Root);
 
             if (stackTree.Count == 0)
             {
-                return myTree;
+                return;
             }
 
             while (stackTree.Count > 0)
             {
-                var selected = stackTree.Pop();
+                TreeNode selected = (TreeNode)stackTree.Pop();
 
 
                 if (selected.LeftSide != null)
@@ -96,7 +95,7 @@ namespace Algoritms5
                 if (selected.RightSide != null)
                     stackTree.Push(selected.RightSide);
             }
-            return myTree;
+
         }
     }
     class Program
@@ -111,8 +110,8 @@ namespace Algoritms5
                 tree.AddItem(num);
             }
 
-            var sample1 = tree.BFS();
-            var sample2 = tree.DFS();
+            tree.BFS();
+            tree.DFS();
         }
     }
 }
